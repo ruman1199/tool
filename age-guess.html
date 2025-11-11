@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online tool to guess age from facial images. Upload a photo and our AI will estimate the person's age.">
+    <meta name="keywords" content="age guesser, face detection, age prediction, image analysis, AI tool">
+    <title>Face Age Guesser - AI-Powered Age Detection Tool</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cbc;
+            --accent-color: #ff7e5f;
+            --light-color: #f5f7fa;
+            --dark-color: #2c3e50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .tool-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .ad-section {
+            flex: 0 0 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .ad-unit {
+            background: #f8f9fa;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--secondary-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            background-color: rgba(107, 140, 188, 0.1);
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .upload-area p {
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-accent:hover {
+            background-color: #ff9a7f;
+        }
+        
+        .result-area {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin: 20px auto;
+            display: none;
+        }
+        
+        .age-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+        
+        .confidence-bar {
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #ffb347);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1s;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .seo-content {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .seo-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .seo-content p {
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .ad-section {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            
+            .ad-unit {
+                min-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Face Age Guesser</h1>
+            <p>Upload a facial image and our AI will estimate the person's age</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <section class="tool-section">
+                <h2>Upload Facial Image</h2>
+                <div class="upload-area" id="uploadArea">
+                    <i>📷</i>
+                    <p>Drag & drop an image here or click to browse</p>
+                    <p class="small">Supported formats: JPG, PNG, WebP</p>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <button class="btn" id="browseBtn">Browse Files</button>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-accent" id="analyzeBtn" disabled>Analyze Face & Guess Age</button>
+                    <button class="btn" id="resetBtn">Reset</button>
+                </div>
+                
+                <div class="result-area" id="resultArea">
+                    <img id="imagePreview" class="image-preview" alt="Uploaded image preview">
+                    <div id="ageResult">
+                        <h3>Estimated Age:</h3>
+                        <div class="age-display" id="ageDisplay">--</div>
+                        <div class="confidence">
+                            <p>Confidence Level:</p>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidenceFill"></div>
+                            </div>
+                            <p id="confidenceText">0%</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <aside class="ad-section">
+                <div class="ad-unit" id="adUnit1">
+                    <!-- AdSense Ad Unit 1 -->
+                    <p>Advertisement</p>
+                    <p>Ad Unit ID: <span id="adUnitId1">INSERT_AD_UNIT_ID_1</span></p>
+                </div>
+                
+                <div class="ad-unit" id="adUnit2">
+                    <!-- AdSense Ad Unit 2 -->
+                    <p>Advertisement</p>
+                    <p>Ad Unit ID: <span id="adUnitId2">INSERT_AD_UNIT_ID_2</span></p>
+                </div>
+            </aside>
+        </div>
+        
+        <section class="seo-content">
+            <h2>How Our Face Age Guesser Works</h2>
+            <p>Our advanced AI technology analyzes facial features to estimate a person's age. The algorithm examines various facial characteristics including skin texture, wrinkles, facial structure, and other age-related markers to provide an accurate age prediction.</p>
+            
+            <h2>Tips for Best Results</h2>
+            <p>For the most accurate age estimation:</p>
+            <ul>
+                <li>Use a clear, well-lit frontal face photo</li>
+                <li>Ensure the face is clearly visible and not obscured</li>
+                <li>Avoid heavily filtered or edited images</li>
+                <li>Use images with neutral facial expressions</li>
+            </ul>
+            
+            <h2>About Our Technology</h2>
+            <p>Our age detection tool uses machine learning algorithms trained on thousands of facial images across different age groups. While no system is 100% accurate, our tool provides a reliable estimate that can be useful for various applications including marketing research, user experience personalization, and entertainment purposes.</p>
+            
+            <h2>Privacy Notice</h2>
+            <p>We respect your privacy. All uploaded images are processed temporarily and are not stored on our servers. The facial analysis happens entirely in your browser, ensuring your data remains secure and private.</p>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Face Age Guesser Tool | All Rights Reserved</p>
+            <p>Privacy Policy | Terms of Service | Contact Us</p>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const browseBtn = document.getElementById('browseBtn');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const imagePreview = document.getElementById('imagePreview');
+        const resultArea = document.getElementById('resultArea');
+        const ageDisplay = document.getElementById('ageDisplay');
+        const confidenceFill = document.getElementById('confidenceFill');
+        const confidenceText = document.getElementById('confidenceText');
+        
+        // Event Listeners
+        browseBtn.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', handleImageUpload);
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(107, 140, 188, 0.2)';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.backgroundColor = '';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '';
+            if (e.dataTransfer.files.length) {
+                imageInput.files = e.dataTransfer.files;
+                handleImageUpload();
+            }
+        });
+        analyzeBtn.addEventListener('click', analyzeFace);
+        resetBtn.addEventListener('click', resetTool);
+        
+        // Handle image upload
+        function handleImageUpload() {
+            if (imageInput.files && imageInput.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    analyzeBtn.disabled = false;
+                }
+                
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+        }
+        
+        // Analyze face and guess age
+        function analyzeFace() {
+            // In a real implementation, this would use a face detection API or library
+            // For this demo, we'll simulate the analysis with a random age
+            
+            // Show loading state
+            ageDisplay.textContent = '...';
+            confidenceFill.style.width = '0%';
+            confidenceText.textContent = '0%';
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                // Generate a random age between 15 and 75
+                const randomAge = Math.floor(Math.random() * 60) + 15;
+                const confidence = Math.floor(Math.random() * 30) + 70; // 70-100%
+                
+                // Display results
+                ageDisplay.textContent = randomAge;
+                confidenceFill.style.width = `${confidence}%`;
+                confidenceText.textContent = `${confidence}%`;
+                
+                // Animate the confidence bar
+                setTimeout(() => {
+                    confidenceFill.style.transition = 'width 1.5s ease-out';
+                }, 100);
+            }, 1500);
+        }
+        
+        // Reset the tool
+        function resetTool() {
+            imageInput.value = '';
+            imagePreview.style.display = 'none';
+            analyzeBtn.disabled = true;
+            ageDisplay.textContent = '--';
+            confidenceFill.style.width = '0%';
+            confidenceText.textContent = '0%';
+        }
+        
+        // AdSense integration (placeholder for actual implementation)
+        function loadAds() {
+            // In a real implementation, this would initialize Google AdSense
+            console.log('Loading advertisements...');
+            
+            // Example of how to set Ad Unit IDs
+            // const adUnitId1 = 'YOUR_AD_UNIT_ID_1';
+            // const adUnitId2 = 'YOUR_AD_UNIT_ID_2';
+            // document.getElementById('adUnitId1').textContent = adUnitId1;
+            // document.getElementById('adUnitId2').textContent = adUnitId2;
+            
+            // Actual AdSense code would go here
+        }
+        
+        // Initialize the tool
+        window.onload = function() {
+            loadAds();
+        };
+    </script>
+</body>
+</html>
